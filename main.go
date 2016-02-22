@@ -1,6 +1,8 @@
 package main
 
 import "fmt"
+import "math/rand"
+import "time"
 
 type Card struct {
   Color string
@@ -23,6 +25,7 @@ var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
 
 func main() {
   println("Hello! Welcome to GoExplore.");
+  rand.Seed(time.Now().UTC().UnixNano())
 
   //Initialize the Deck
   var deck CardCollection
@@ -36,6 +39,12 @@ func main() {
     deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
     deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
     deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
+  }
+
+  //Shuffle the deck.
+  for i := range deck.Cards {
+    j := rand.Intn(i+1)
+    deck.Cards[i], deck.Cards[j] = deck.Cards[j], deck.Cards[i]
   }
 
   TestDeckSetup(deck)
