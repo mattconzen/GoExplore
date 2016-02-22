@@ -3,6 +3,7 @@ package main
 import "fmt"
 import "math/rand"
 import "time"
+import "github.com/fatih/color"
 
 type Card struct {
   color string
@@ -20,7 +21,7 @@ type Player struct {
 var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
 
 func main() {
-  println("Hello! Welcome to GoExplore.");
+  println("Hello! Welcome to GoExplore.\n\n");
   rand.Seed(time.Now().UTC().UnixNano())
 
   var deck CardCollection
@@ -69,13 +70,26 @@ func Shuffle(cardCol CardCollection) (CardCollection) {
 }
 
 func PrintCards(deck CardCollection) {
-  //Print the count of cards in the Deck
-  fmt.Printf("Card count: %d\n",len(deck.cards))
-
-  //Print each card in the deck.
+  //Print each card in the passed in collection.
   for _,card := range deck.cards {
+    switch card.color {
+      case "Yellow":
+        color.Set(color.FgYellow).Add(color.Bold)
+      case "Green":
+        color.Set(color.FgGreen).Add(color.Bold)
+      case "Blue":
+        color.Set(color.FgBlue).Add(color.Bold)
+      case "Red":
+        color.Set(color.FgRed).Add(color.Bold)
+      case "White":
+        color.Set(color.FgWhite).Add(color.Bold)
+    }
     fmt.Printf("%s|%d\n", card.color, card.value)
+    color.Unset()
   }
+
+  //Print the count of cards in the Deck
+  fmt.Printf("Card count: %d\n\n",len(deck.cards))
 }
 
 func TestStructs() {
