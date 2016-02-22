@@ -5,20 +5,16 @@ import "math/rand"
 import "time"
 
 type Card struct {
-  Color string
-  Value int
+  color string
+  value int
 }
 
 type CardCollection struct {
-  Cards []Card
+  cards []Card
 }
 
-type P1 struct {
-  Cards CardCollection
-}
-
-type P2 struct {
-  Cards CardCollection
+type Player struct {
+  hand CardCollection
 }
 
 var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
@@ -32,38 +28,47 @@ func main() {
   deck = InitializeDeck(deck)
   deck = Shuffle(deck)
 
-  TestDeckSetup(deck)
+  PrintCards(deck)
+
+  var p1 Player
+  var p2 Player
+
+  p1.hand = CardCollection{cards: deck.cards[:8]}
+  p2.hand = CardCollection{cards: deck.cards[8:16]}
+
+  PrintCards(p1.hand)
+  PrintCards(p2.hand)
 }
 
 func InitializeDeck(deck CardCollection) (CardCollection) {
   for _,color := range Colors {
     for i := 1; i <= 10; i++ {
-      deck.Cards = append(deck.Cards, Card{Color: color, Value: i})
+      deck.cards = append(deck.cards, Card{color: color, value: i})
     }
 
     //Add betting cards as cards with a value of zero for now.
-    deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
-    deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
-    deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
+    deck.cards = append(deck.cards, Card{color: color, value: 0})
+    deck.cards = append(deck.cards, Card{color: color, value: 0})
+    deck.cards = append(deck.cards, Card{color: color, value: 0})
   }
   return deck
 }
 
-func Shuffle(cards CardCollection) (CardCollection) {
-  for i := range cards.Cards {
+func Shuffle(cardCol CardCollection) (CardCollection) {
+  for i := range cardCol.cards {
     j := rand.Intn(i+1)
-    cards.Cards[i], cards.Cards[j] = cards.Cards[j], cards.Cards[i]
+    cardCol.cards[i], cardCol.cards[j] = cardCol.cards[j], cardCol.cards[i]
   }
-  return cards
+  return cardCol
 }
 
-func TestDeckSetup(deck CardCollection) {
+func PrintCards(deck CardCollection) {
   //Print the count of cards in the Deck
-  fmt.Printf("Deck count: %d\n",len(deck.Cards))
+  fmt.Printf("Card count: %d\n",len(deck.cards))
 
   //Print each card in the deck.
-  for _,card := range deck.Cards {
-    fmt.Printf("%s|%d\n", card.Color, card.Value)
+  for _,card := range deck.cards {
+    fmt.Printf("%s|%d\n", card.color, card.value)
   }
 }
 
@@ -73,7 +78,7 @@ func TestStructs() {
     println (element);
   }
 
-  newCard := Card{ Color: "white", Value: 1 }
+  newCard := Card{ color: "white", value: 1 }
 
-  println(newCard.Color)
+  println(newCard.color)
 }
