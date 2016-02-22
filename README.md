@@ -12,3 +12,5 @@ Notes:
 Color should be implemented at some time.
 
 Can Go objects have print representations like Elixir objects? Perhaps I should just write this in Elixir :)
+
+Slidedeck on a very basic chat program using WebSockets (useful for this project?): https://talks.golang.org/2012/chat.slide#27
