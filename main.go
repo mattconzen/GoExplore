@@ -27,9 +27,15 @@ func main() {
   println("Hello! Welcome to GoExplore.");
   rand.Seed(time.Now().UTC().UnixNano())
 
-  //Initialize the Deck
   var deck CardCollection
 
+  deck = InitializeDeck(deck)
+  deck = Shuffle(deck)
+
+  TestDeckSetup(deck)
+}
+
+func InitializeDeck(deck CardCollection) (CardCollection) {
   for _,color := range Colors {
     for i := 1; i <= 10; i++ {
       deck.Cards = append(deck.Cards, Card{Color: color, Value: i})
@@ -40,14 +46,15 @@ func main() {
     deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
     deck.Cards = append(deck.Cards, Card{Color: color, Value: 0})
   }
+  return deck
+}
 
-  //Shuffle the deck.
-  for i := range deck.Cards {
+func Shuffle(cards CardCollection) (CardCollection) {
+  for i := range cards.Cards {
     j := rand.Intn(i+1)
-    deck.Cards[i], deck.Cards[j] = deck.Cards[j], deck.Cards[i]
+    cards.Cards[i], cards.Cards[j] = cards.Cards[j], cards.Cards[i]
   }
-
-  TestDeckSetup(deck)
+  return cards
 }
 
 func TestDeckSetup(deck CardCollection) {
