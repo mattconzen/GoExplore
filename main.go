@@ -74,15 +74,15 @@ func PrintCards(deck CardCollection) {
   for _,card := range deck.cards {
     switch card.color {
       case "Yellow":
-        color.Set(color.FgYellow).Add(color.Bold)
+        color.Set(color.FgYellow, color.Bold)
       case "Green":
-        color.Set(color.FgGreen).Add(color.Bold)
+        color.Set(color.FgGreen, color.Bold)
       case "Blue":
-        color.Set(color.FgBlue).Add(color.Bold)
+        color.Set(color.FgBlue, color.Bold)
       case "Red":
-        color.Set(color.FgRed).Add(color.Bold)
+        color.Set(color.FgRed, color.Bold)
       case "White":
-        color.Set(color.FgWhite).Add(color.Bold)
+        color.Set(color.FgWhite, color.Bold)
     }
     fmt.Printf("%s|%d\n", card.color, card.value)
     color.Unset()
