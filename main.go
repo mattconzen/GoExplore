@@ -38,6 +38,12 @@ func main() {
 
   PrintCards(p1.hand)
   PrintCards(p2.hand)
+
+  //TODO: Simulate P1's first turn by playing a card at random
+
+  //TODO: Ask for Player Input (P2) to play a card from P2's hand
+
+  //TODO: Add game loop: do until...len(deck.cards) = 0
 }
 
 func InitializeDeck(deck CardCollection) (CardCollection) {
