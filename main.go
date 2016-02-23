@@ -4,6 +4,7 @@ import "fmt"
 import "math/rand"
 import "time"
 import "github.com/fatih/color"
+import "os"
 
 type Card struct {
   color string
@@ -26,7 +27,7 @@ func (p *Player) Play(i int) {
 
 func (p *Player) Draw(deck *CardCollection) {
   p.hand.cards = append(p.hand.cards, deck.cards[:1]...)
-  deck.cards = append(deck.cards[:0], deck.cards[1:]...)
+  deck.cards =  deck.cards[1:]
 }
 
 var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
@@ -54,30 +55,35 @@ func main() {
   fmt.Printf("\nP2: ")
   PrintCards(p2.hand)
 
+  for {
+    //Simulate P1's first turn by playing a card at random
+    //Slice a card off of P1 and add it to the Board
+    fmt.Printf("\nPlayer 1 plays the 3rd card:")
+    p1.Play(3)
+    p1.Draw(&deck)
 
-  //Simulate P1's first turn by playing a card at random
-  //Slice a card off of P1 and add it to the Board
-  fmt.Printf("\nPlayer 1 plays the 3rd card:")
-  p1.Play(3)
-  p1.Draw(&deck)
+    fmt.Printf("\nP1: ")
+    PrintCards(p1.hand)
+    PrintCards(p1.board)
 
-  fmt.Printf("\nP1: ")
-  PrintCards(p1.hand)
-  PrintCards(p1.board)
+    //Ask for Player Input (P2) to play a card from P2's hand
+    fmt.Printf("\nPlayer 2's turn, enter a card index: ")
+    var cardIndex int
 
-  //Ask for Player Input (P2) to play a card from P2's hand
-  fmt.Printf("\nPlayer 2's turn, enter a card index: ")
-  var cardIndex int
-  _,err := fmt.Scanf("%d", &cardIndex)
-  if err != nil {
-    return
+    fmt.Scanf("%d", &cardIndex)
+
+    p2.Play(cardIndex)
+    p2.Draw(&deck)
+
+    fmt.Printf("\nP2: ")
+    PrintCards(p2.hand)
+    PrintCards(p2.board)
+
+    if len(deck.cards) == 0 {
+      fmt.Printf("Game over!")
+      os.Exit(2)
+    }
   }
-  p2.Play(cardIndex)
-  p2.Draw(&deck)
-
-  fmt.Printf("\nP2: ")
-  PrintCards(p2.hand)
-  PrintCards(p2.board)
   //TODO: Add game loop: do until...len(deck.cards) = 0
 }
 
