@@ -44,9 +44,10 @@ func main() {
   var p2 Player
 
   p1.hand = CardCollection{cards: deck.cards[:8]}
-  deck.cards = append(deck.cards[:0], deck.cards[8:]...)
+  deck.cards = deck.cards[8:]
+
   p2.hand = CardCollection{cards: deck.cards[:8]}
-  deck.cards = append(deck.cards[:0], deck.cards[8:]...)
+  deck.cards = deck.cards[8:]
 
   fmt.Printf("\nP1: ")
   PrintCards(p1.hand)
