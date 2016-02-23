@@ -16,6 +16,17 @@ type CardCollection struct {
 
 type Player struct {
   hand CardCollection
+  board CardCollection
+}
+
+func (p *Player) Play(i int) {
+  p.board.cards = append(p.board.cards, p.hand.cards[i])
+  p.hand.cards = append(p.hand.cards[:i], p.hand.cards[i+1:]...)
+}
+
+func (p *Player) Draw(deck *CardCollection) {
+  p.hand.cards = append(p.hand.cards, deck.cards[:1]...)
+  deck.cards = append(deck.cards[:0], deck.cards[1:]...)
 }
 
 var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
@@ -29,21 +40,43 @@ func main() {
   deck = InitializeDeck(deck)
   deck = Shuffle(deck)
 
-  PrintCards(deck)
-
   var p1 Player
   var p2 Player
 
   p1.hand = CardCollection{cards: deck.cards[:8]}
-  p2.hand = CardCollection{cards: deck.cards[8:16]}
+  deck.cards = append(deck.cards[:0], deck.cards[8:]...)
+  p2.hand = CardCollection{cards: deck.cards[:8]}
+  deck.cards = append(deck.cards[:0], deck.cards[8:]...)
 
+  fmt.Printf("\nP1: ")
   PrintCards(p1.hand)
+  fmt.Printf("\nP2: ")
   PrintCards(p2.hand)
 
-  //TODO: Simulate P1's first turn by playing a card at random
 
-  //TODO: Ask for Player Input (P2) to play a card from P2's hand
+  //Simulate P1's first turn by playing a card at random
+  //Slice a card off of P1 and add it to the Board
+  fmt.Printf("\nPlayer 1 plays the 3rd card:")
+  p1.Play(3)
+  p1.Draw(&deck)
 
+  fmt.Printf("\nP1: ")
+  PrintCards(p1.hand)
+  PrintCards(p1.board)
+
+  //Ask for Player Input (P2) to play a card from P2's hand
+  fmt.Printf("\nPlayer 2's turn, enter a card index: ")
+  var cardIndex int
+  _,err := fmt.Scanf("%d", &cardIndex)
+  if err != nil {
+    return
+  }
+  p2.Play(cardIndex)
+  p2.Draw(&deck)
+
+  fmt.Printf("\nP2: ")
+  PrintCards(p2.hand)
+  PrintCards(p2.board)
   //TODO: Add game loop: do until...len(deck.cards) = 0
 }
 
@@ -84,7 +117,7 @@ func PrintCards(deck CardCollection) {
       case "White":
         color.Set(color.FgWhite, color.Bold)
     }
-    fmt.Printf("%s|%d\n", card.color, card.value)
+    fmt.Printf("%d ", card.value)
     color.Unset()
   }
 
