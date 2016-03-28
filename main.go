@@ -6,20 +6,6 @@ import "time"
 import "github.com/fatih/color"
 import "os"
 
-type Card struct {
-  color string
-  value int
-}
-
-type CardCollection struct {
-  cards []Card
-}
-
-type Player struct {
-  hand CardCollection
-  board CardCollection
-}
-
 func (p *Player) Play(i int) {
   p.board.cards = append(p.board.cards, p.hand.cards[i])
   p.hand.cards = append(p.hand.cards[:i], p.hand.cards[i+1:]...)
@@ -130,15 +116,4 @@ func PrintCards(deck CardCollection) {
 
   //Print the count of cards in the Deck
   fmt.Printf("Card count: %d\n\n",len(deck.cards))
-}
-
-func TestStructs() {
-  // Write each color in the Colors collection.
-  for _,element := range Colors {
-    println (element);
-  }
-
-  newCard := Card{ color: "white", value: 1 }
-
-  println(newCard.color)
 }
