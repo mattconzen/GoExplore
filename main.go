@@ -4,6 +4,7 @@ import "fmt"
 import "math/rand"
 import "time"
 import "github.com/fatih/color"
+import tl "github.com/JoelOtter/termloop"
 import "os"
 
 func (p *Player) Play(i int) {
@@ -17,6 +18,25 @@ func (p *Player) Draw(deck *CardCollection) {
 }
 
 var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
+
+type DrawableCard struct {
+  text *tl.Text
+  card Card
+}
+
+func (d *DrawableCard) Draw(s *tl.Screen) {
+  d.text.Draw(s)
+}
+
+func (d *DrawableCard) Tick(ev tl.Event) {
+  // Do stuff on each tick??
+  if ev.Type == tl.EventKey {
+    switch ev.Key {
+      case tl.KeyEsc:
+        os.Exit(3)
+    }
+  }
+}
 
 func main() {
   println("Hello! Welcome to GoExplore.\n\n");
@@ -41,36 +61,49 @@ func main() {
   fmt.Printf("\nP2: ")
   PrintCards(p2.hand)
 
-  for {
-    //Simulate P1's first turn by playing a card at random
-    //Slice a card off of P1 and add it to the Board
-    fmt.Printf("\nPlayer 1 plays the 3rd card:")
-    p1.Play(3)
-    p1.Draw(&deck)
+  //Initiate the Game Screen
+  g := tl.NewGame()
 
-    fmt.Printf("\nP1: ")
-    PrintCards(p1.hand)
-    PrintCards(p1.board)
-
-    //Ask for Player Input (P2) to play a card from P2's hand
-    fmt.Printf("\nPlayer 2's turn, enter a card index: ")
-    var cardIndex int
-
-    fmt.Scanf("%d", &cardIndex)
-
-    p2.Play(cardIndex)
-    p2.Draw(&deck)
-
-    fmt.Printf("\nP2: ")
-    PrintCards(p2.hand)
-    PrintCards(p2.board)
-
-    if len(deck.cards) == 0 {
-      fmt.Printf("Game over!")
-      os.Exit(2)
-    }
+  // For each Card in P1's hand...
+  i := 0
+  for _,card := range deck.cards {
+    g.Screen().AddEntity(&DrawableCard{
+      text: tl.NewText(i,0, string(card.value), GetTLColorFromString(card.color), tl.ColorBlack),
+      card: card,
+    })
+    i++
   }
-  //TODO: Add game loop: do until...len(deck.cards) = 0
+
+  g.Start()
+  // for {
+  //   //Simulate P1's first turn by playing a card at random
+  //   //Slice a card off of P1 and add it to the Board
+  //   fmt.Printf("\nPlayer 1 plays the 3rd card:")
+  //   p1.Play(3)
+  //   p1.Draw(&deck)
+  //
+  //   fmt.Printf("\nP1: ")
+  //   PrintCards(p1.hand)
+  //   PrintCards(p1.board)
+  //
+  //   //Ask for Player Input (P2) to play a card from P2's hand
+  //   fmt.Printf("\nPlayer 2's turn, enter a card index: ")
+  //   var cardIndex int
+  //
+  //   fmt.Scanf("%d", &cardIndex)
+  //
+  //   p2.Play(cardIndex)
+  //   p2.Draw(&deck)
+  //
+  //   fmt.Printf("\nP2: ")
+  //   PrintCards(p2.hand)
+  //   PrintCards(p2.board)
+  //
+  //   if len(deck.cards) == 0 {
+  //     fmt.Printf("Game over!")
+  //     os.Exit(2)
+  //   }
+  // }
 }
 
 func InitializeDeck(deck CardCollection) (CardCollection) {
@@ -93,6 +126,23 @@ func Shuffle(cardCol CardCollection) (CardCollection) {
     cardCol.cards[i], cardCol.cards[j] = cardCol.cards[j], cardCol.cards[i]
   }
   return cardCol
+}
+
+func GetTLColorFromString(color string) (tl.Attr) {
+  switch color {
+    case "Yellow":
+      return 4
+    case "Green":
+      return 3
+    case "Blue":
+      return 5
+    case "Red":
+      return 2
+    case "White":
+      return 8
+    default:
+      return 0
+    }
 }
 
 func PrintCards(deck CardCollection) {
