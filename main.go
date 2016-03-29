@@ -12,7 +12,7 @@ func (p *Player) Play(i int) {
   p.hand.cards = append(p.hand.cards[:i], p.hand.cards[i+1:]...)
 }
 
-func (p *Player) Draw(deck *CardCollection) {
+func (p *Player) Draw() {
   p.hand.cards = append(p.hand.cards, deck.cards[:1]...)
   deck.cards =  deck.cards[1:]
 }
@@ -21,6 +21,13 @@ var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
 
 var P1_HAND_Y_COORDINATE = 5
 var P2_HAND_Y_COORDINATE = 15
+
+var p1 Player
+var p2 Player
+
+var g *tl.Game
+
+var deck CardCollection
 
 type DrawableCard struct {
   text *tl.Text
@@ -37,6 +44,9 @@ func (d *DrawableCard) Tick(ev tl.Event) {
     switch ev.Key {
       case tl.KeyEsc:
         os.Exit(3)
+      case tl.KeyEnter:
+        p2.Draw()
+        DrawHand(p2.hand.cards, P2_HAND_Y_COORDINATE, g)
     }
   }
 }
@@ -45,13 +55,8 @@ func main() {
   println("Hello! Welcome to GoExplore.\n\n");
   rand.Seed(time.Now().UTC().UnixNano())
 
-  var deck CardCollection
-
   deck = InitializeDeck(deck)
   deck = Shuffle(deck)
-
-  var p1 Player
-  var p2 Player
 
   p1.hand = CardCollection{cards: deck.cards[:8]}
   deck.cards = deck.cards[8:]
@@ -65,7 +70,7 @@ func main() {
   PrintCards(p2.hand)
 
   //Initiate the Game Screen
-  g := tl.NewGame()
+  g = tl.NewGame()
 
   DrawHand(p1.hand.cards, P1_HAND_Y_COORDINATE, g)
   DrawHand(p2.hand.cards, P2_HAND_Y_COORDINATE, g)
