@@ -19,6 +19,9 @@ func (p *Player) Draw(deck *CardCollection) {
 
 var Colors = []string{"White", "Red", "Blue", "Green", "Yellow"}
 
+var P1_HAND_Y_COORDINATE = 5
+var P2_HAND_Y_COORDINATE = 15
+
 type DrawableCard struct {
   text *tl.Text
   card Card
@@ -64,15 +67,8 @@ func main() {
   //Initiate the Game Screen
   g := tl.NewGame()
 
-  // For each Card in P1's hand...
-  i := 0
-  for _,card := range deck.cards {
-    g.Screen().AddEntity(&DrawableCard{
-      text: tl.NewText(i,0, string(card.value), GetTLColorFromString(card.color), tl.ColorBlack),
-      card: card,
-    })
-    i++
-  }
+  DrawHand(p1.hand.cards, P1_HAND_Y_COORDINATE, g)
+  DrawHand(p2.hand.cards, P2_HAND_Y_COORDINATE, g)
 
   g.Start()
   // for {
@@ -104,6 +100,23 @@ func main() {
   //     os.Exit(2)
   //   }
   // }
+}
+
+func DrawHand(cards []Card, Y_COORDINATE int, g *tl.Game) {
+  // For each Card in P1's hand...
+  i := 0
+
+  for _,card := range cards {
+    cardValue := fmt.Sprintf("%d", card.value)
+
+    g.Screen().AddEntity(&DrawableCard{
+      text: tl.NewText(i,Y_COORDINATE, cardValue, GetTLColorFromString(card.color), tl.ColorBlack),
+      card: card,
+    })
+
+    i = i+4
+  }
+
 }
 
 func InitializeDeck(deck CardCollection) (CardCollection) {
