@@ -3,6 +3,7 @@ package main
 import "fmt"
 import "math/rand"
 import "time"
+import "github.com/fatih/color"
 
 type Card struct {
   color string
@@ -74,7 +75,20 @@ func PrintCards(deck CardCollection) {
 
   //Print each card in the deck.
   for _,card := range deck.cards {
+    switch card.color {
+    case <="Yellow":
+        color.Set(color.FgYellow)
+      case "Green":
+        color.Set(color.FgGreen)
+      case "Blue":
+        color.Set(color.FgBlue)
+      case "Red":
+        color.Set(color.FgRed)
+      case "White":
+        color.Set(color.FgWhite)
+    }
     fmt.Printf("%s|%d\n", card.color, card.value)
+    color.Unset()
   }
 }
 
